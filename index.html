@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบแจ้งซ่อมอุปกรณ์ - อาคารเรียนรวม 80 ปี มหาวิทยาลัยแม่โจ้</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Prompt) -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome ไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js แสดงกราฟ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Prompt', sans-serif; }
+        .mju-bg { background-color: #005a2b; }
+        .mju-border { border-color: #005a2b; }
+        .mju-text { color: #005a2b; }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header class="mju-bg text-white shadow-lg border-b-4 border-amber-400">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-amber-300 text-2xl font-bold border border-white/20 shadow-inner">
+                    <i class="fa-solid fa-building-circle-check"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-wide">ระบบแจ้งซ่อมและติดตามงานอุปกรณ์</h1>
+                    <p class="text-xs md:text-sm text-emerald-100 flex items-center gap-2">
+                        <span>อาคารเรียนรวม 80 ปี</span>
+                        <span>•</span>
+                        <span class="text-amber-300 font-medium">มหาวิทยาลัยแม่โจ้</span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3 text-xs md:text-sm">
+                <button onclick="loadDataFromGviz()" class="bg-white/10 hover:bg-white/20 text-white font-medium px-3 py-2 rounded-lg transition border border-white/20 flex items-center gap-2">
+                    <i class="fa-solid fa-rotate"></i> รีเฟรชข้อมูล
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-8 flex-grow w-full">
+
+        <!-- สรุปสถิติภาพรวมหลัก -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between hover:shadow-md transition">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">คำร้องทั้งหมด</p>
+                    <h3 class="text-3xl font-extrabold text-slate-800 mt-1"><span id="stat-total">0</span> <span class="text-xs font-normal text-slate-500">รายการ</span></h3>
+                    <p class="text-[10px] text-slate-500 mt-1">อัปเดตจาก Google Sheets</p>
+                </div>
+                <div class="w-14 h-14 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between hover:shadow-md transition">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">เครื่องปรับอากาศ</p>
+                    <h3 class="text-3xl font-extrabold text-sky-600 mt-1"><span id="stat-ac">0</span> <span class="text-xs font-normal text-slate-500">รายการ</span></h3>
+                </div>
+                <div class="w-14 h-14 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
+                    <i class="fa-solid fa-fan"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between hover:shadow-md transition">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">ไฟฟ้า & แสงสว่าง</p>
+                    <h3 class="text-3xl font-extrabold text-amber-600 mt-1"><span id="stat-electric">0</span> <span class="text-xs font-normal text-slate-500">รายการ</span></h3>
+                </div>
+                <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between hover:shadow-md transition">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">ระบบประปา & สุขภัณฑ์</p>
+                    <h3 class="text-3xl font-extrabold text-teal-600 mt-1"><span id="stat-water">0</span> <span class="text-xs font-normal text-slate-500">รายการ</span></h3>
+                </div>
+                <div class="w-14 h-14 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
+                    <i class="fa-solid fa-faucet-drip"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- สรุปสัดส่วนประเภทงาน และ กราฟแท่งแสดงจำแนกตามชั้น -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- สัดส่วนประเภทงาน (Doughnut Chart) -->
+            <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-base font-bold text-slate-800 mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie mju-text"></i> สัดส่วนประเภทงาน
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-2">วิเคราะห์สัดส่วนหมวดหมู่งานซ่อมบำรุง</p>
+                </div>
+                <div class="relative h-[280px] w-full flex justify-center items-center mt-2">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- จำนวนรายการจำแนกตามชั้น (Horizontal Bar Chart) -->
+            <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-bar mju-text"></i> จำนวนรายการการส่งซ่อมจำแนกตามชั้น
+                        </h3>
+                        <span class="text-xs bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full font-medium">ตึก 80 ปี</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-3">แสดงสถิติความถี่ของการเกิดปัญหาในแต่ละพื้นที่</p>
+                </div>
+
+                <div class="relative h-[240px] w-full mt-2 pr-6">
+                    <canvas id="floorBarChart"></canvas>
+                </div>
+
+                <div class="mt-4 p-3.5 bg-slate-50 rounded-xl border border-slate-200/70 text-xs text-slate-600 space-y-1.5">
+                    <div class="flex justify-between items-center font-medium text-slate-700">
+                        <span><i class="fa-solid fa-circle-exclamation text-amber-500 mr-1.5"></i> ชั้นที่มีการแจ้งซ่อมสูงสุด:</span>
+                        <span id="detail-top-floor" class="text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded">-</span>
+                    </div>
+                    <div class="flex justify-between items-center text-slate-500">
+                        <span><i class="fa-solid fa-layer-group text-slate-400 mr-1.5"></i> รวมคำร้องส่วนกลาง / พื้นที่อื่น ๆ:</span>
+                        <span id="detail-other-count" class="font-semibold text-slate-700">0 รายการ</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ฟอร์มและตารางแสดงรายการ -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            
+            <!-- ฟอร์มแจ้งซ่อม (Col 1-4) -->
+            <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/85 flex flex-col justify-between">
+                <div>
+                    <div class="border-b border-slate-100 pb-3 mb-4 flex items-center justify-between">
+                        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square mju-text"></i> ยื่นคำร้องแจ้งซ่อม
+                        </h2>
+                    </div>
+
+                    <form id="repairForm" class="space-y-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">เลขที่คำร้อง <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-hashtag text-xs"></i></span>
+                                <input type="text" id="request_id" required class="w-full pl-9 pr-3 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" placeholder="เช่น REQ-001">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">ชื่อผู้แจ้ง <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400"><i class="fa-solid fa-user text-xs"></i></span>
+                                    <input type="text" id="reporter" required class="w-full pl-8 pr-2 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" placeholder="ชื่อ-นามสกุล">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">เบอร์โทร <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400"><i class="fa-solid fa-phone text-xs"></i></span>
+                                    <input type="tel" id="phone" required class="w-full pl-8 pr-2 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" placeholder="เบอร์โทร/ภายใน">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">ประเภทงานซ่อม <span class="text-red-500">*</span></label>
+                            <select id="category" required class="w-full px-3 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-white">
+                                <option value="">-- เลือกหมวดหมู่งานซ่อม --</option>
+                                <option value="ซ่อม และติดตั้งไฟฟ้า">ซ่อม และติดตั้งไฟฟ้า</option>
+                                <option value="ซ่อม และติดตั้งประปา">ซ่อม และติดตั้งประปา</option>
+                                <option value="ซ่อมอาคาร บ้านพัก/แฟลต ซ่อมครุภัณฑ์">ซ่อมอาคาร / ซ่อมครุภัณฑ์</option>
+                                <option value="อื่น ๆ (โปรดระบุ)">อื่น ๆ (เครื่องปรับอากาศ / ลิฟต์ / IT)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">สถานที่และตำแหน่ง <span class="text-red-500">*</span></label>
+                            <div class="space-y-1.5">
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-building text-xs"></i></span>
+                                    <input type="text" id="location_building" required class="w-full pl-9 pr-3 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" value="อาคารเรียนรวม 80 ปี">
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400"><i class="fa-solid fa-layer-group text-xs"></i></span>
+                                        <select id="location_floor" required class="w-full pl-8 pr-2 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-white text-slate-700">
+                                            <option value="">-- ระบุชั้น --</option>
+                                            <option value="ชั้น 1">ชั้น 1</option>
+                                            <option value="ชั้น 2">ชั้น 2</option>
+                                            <option value="ชั้น 3">ชั้น 3</option>
+                                            <option value="ชั้น 4">ชั้น 4</option>
+                                            <option value="ชั้น 5">ชั้น 5</option>
+                                            <option value="Co-Working Space">Co-Working Space</option>
+                                            <option value="พื้นที่อื่นๆ">พื้นที่อื่นๆ</option>
+                                        </select>
+                                    </div>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400"><i class="fa-solid fa-door-open text-xs"></i></span>
+                                        <input type="text" id="location_room" required class="w-full pl-8 pr-2 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" placeholder="ห้อง เช่น 80-503">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">รายละเอียดปัญหา <span class="text-red-500">*</span></label>
+                            <textarea id="description" rows="2" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" placeholder="อธิบายอาการเบื้องต้น..."></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <button type="submit" form="repairForm" id="submitBtn" class="w-full mju-bg hover:bg-emerald-800 text-white font-semibold py-2.5 rounded-xl shadow-md transition duration-200 text-xs flex items-center justify-center gap-2 mt-3">
+                    <i class="fa-solid fa-paper-plane"></i> บันทึกรายการแจ้งซ่อม
+                </button>
+            </div>
+
+            <!-- ตารางแสดงข้อมูลรายการแจ้งซ่อม (Col 5-12) พร้อมฟีเจอร์ค้นหาขั้นสูง -->
+            <div class="lg:col-span-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+                
+                <div class="space-y-4">
+                    <!-- ส่วนหัวข้อและช่องตัวกรองขั้นสูงตามรูป -->
+                    <div class="border-b border-slate-100 pb-4 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-filter mju-text"></i> ค้นหาและตัวกรองข้อมูลขั้นสูง
+                            </h2>
+                            <button onclick="resetFilters()" class="text-xs text-red-600 hover:text-red-800 font-medium flex items-center gap-1 transition">
+                                <i class="fa-solid fa-rotate-right"></i> ล้างตัวกรองทั้งหมด
+                            </button>
+                        </div>
+
+                        <!-- 3 ช่องกรองข้อมูลหลัก -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <!-- ช่องค้นหาหลัก -->
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-500 mb-1">คำค้นหาหลัก (เลขที่/ผู้แจ้ง/ปัญหา/ห้อง)</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                                    </span>
+                                    <input type="text" id="filterKeyword" onkeyup="applyFilters()" placeholder="พิมพ์สิ่งที่ต้องการค้นหา..." class="w-full pl-9 pr-3 py-1.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-slate-50/50">
+                                </div>
+                            </div>
+
+                            <!-- กรองประเภทงานซ่อม -->
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-500 mb-1">ประเภทงานซ่อม</label>
+                                <select id="filterCategory" onchange="applyFilters()" class="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white text-slate-700">
+                                    <option value="">แสดงทั้งหมด</option>
+                                    <option value="ซ่อม และติดตั้งไฟฟ้า">ซ่อม และติดตั้งไฟฟ้า</option>
+                                    <option value="ซ่อม และติดตั้งประปา">ซ่อม และติดตั้งประปา</option>
+                                    <option value="ซ่อมอาคาร บ้านพัก/แฟลต ซ่อมครุภัณฑ์">ซ่อมอาคาร / ซ่อมครุภัณฑ์</option>
+                                    <option value="อื่น ๆ (โปรดระบุ)">อื่น ๆ (เครื่องปรับอากาศ / IT)</option>
+                                </select>
+                            </div>
+
+                            <!-- กรองปีที่แจ้ง (พ.ศ.) -->
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-500 mb-1">ปีที่แจ้ง (พ.ศ.)</label>
+                                <select id="filterYear" onchange="applyFilters()" class="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white text-slate-700">
+                                    <option value="">แสดงทั้งหมดทุกปี</option>
+                                    <option value="2569">พ.ศ. 2569</option>
+                                    <option value="2568">พ.ศ. 2568</option>
+                                    <option value="2567">พ.ศ. 2567</option>
+                                    <option value="2566">พ.ศ. 2566</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- สรุปผลลัพธ์การกรอง -->
+                        <div class="flex justify-between items-center text-xs text-slate-500 pt-1">
+                            <span>พบข้อมูล <strong id="filteredCount" class="text-emerald-700 font-bold">0</strong> จากทั้งหมด <strong id="totalCount" class="text-slate-800 font-bold">0</strong> รายการ</span>
+                        </div>
+                    </div>
+
+                    <!-- ตารางข้อมูล -->
+                    <div class="overflow-x-auto border border-slate-200/80 rounded-xl h-[340px]">
+                        <table class="w-full text-left border-collapse text-sm table-fixed">
+                            <thead class="sticky top-0 bg-slate-100 text-slate-700 border-b border-slate-200 text-xs uppercase tracking-wider font-semibold z-10 shadow-sm">
+                                <tr>
+                                    <th class="p-3 w-[15%]">เลขที่คำร้อง</th>
+                                    <th class="p-3 w-[15%]">วันที่ยื่นคำขอ</th>
+                                    <th class="p-3 w-[20%]">ผู้แจ้ง / ติดต่อ</th>
+                                    <th class="p-3 w-[25%]">สถานที่</th>
+                                    <th class="p-3 w-[25%]">รายละเอียดปัญหา</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody" class="divide-y divide-slate-100">
+                                <tr>
+                                    <td colspan="5" class="text-center py-12 text-slate-400">
+                                        <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-emerald-600 block"></i>
+                                        กำลังดึงข้อมูลจาก Google Sheets...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="text-[11px] text-slate-400 text-right pt-2">
+                    * คลิกที่แถวในตารางเพื่อดูรายละเอียดคำร้องฉบับเต็ม
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Modal Popup สำหรับดูรายละเอียด -->
+    <div id="detailModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 transition-transform duration-300" id="modalContent">
+            <!-- Modal Header -->
+            <div class="mju-bg text-white px-5 py-4 flex justify-between items-center">
+                <h3 class="text-base font-bold flex items-center gap-2"><i class="fa-solid fa-circle-info"></i> รายละเอียดการแจ้งซ่อม</h3>
+                <button onclick="closeModal()" class="text-white hover:text-red-200 transition text-lg w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-6 space-y-4 text-sm text-slate-700">
+                <div class="grid grid-cols-2 gap-4 border-b border-slate-100 pb-3">
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400 mb-1">เลขที่คำร้อง</span>
+                        <span id="m_id" class="font-bold text-emerald-700"></span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400 mb-1">วันที่ยื่นคำขอ</span>
+                        <span id="m_date" class="font-medium text-slate-800"></span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 border-b border-slate-100 pb-3">
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400 mb-1">ผู้แจ้ง</span>
+                        <span id="m_name" class="font-medium text-slate-800"></span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400 mb-1">เบอร์ติดต่อ</span>
+                        <span class="font-medium text-slate-800 flex items-center gap-1"><i class="fa-solid fa-phone text-xs text-slate-400"></i> <span id="m_phone"></span></span>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-3">
+                    <span class="block text-xs font-semibold text-slate-400 mb-1">ประเภทงานและสถานที่</span>
+                    <span id="m_type" class="inline-block bg-slate-100 text-slate-700 text-[11px] px-2.5 py-0.5 rounded border border-slate-200 mb-1.5 font-medium"></span>
+                    <div class="text-slate-700 flex items-start gap-1.5">
+                        <i class="fa-solid fa-location-dot text-emerald-600 mt-0.5"></i>
+                        <span id="m_loc" class="leading-relaxed"></span>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="block text-xs font-semibold text-slate-400 mb-1">รายละเอียดปัญหา / อาการ</span>
+                    <div id="m_desc" class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/60 text-slate-700 whitespace-pre-wrap leading-relaxed"></div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                <button onclick="closeModal()" class="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 px-5 py-2 rounded-xl font-medium transition text-sm shadow-sm">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwH9YTf5eK2PKtSz06dsj1rnk9-MvhiggUvg6JdHYmDxnCBzXOlZdVm4mccad-sB-Ri/exec';
+        const SPREADSHEET_ID = '1-nDX_kjHVp9V0A7jSrvlZ8MKfuZTIUh-uSrC1I5VIok';
+        let allData = [];
+        let categoryPieChart = null;
+        let floorBarChart = null;
+
+        function getCurrentDate() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear() + 543;
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', loadDataFromGviz);
+
+        function loadDataFromGviz() {
+            const oldScript = document.getElementById('gviz-script');
+            if (oldScript) oldScript.remove();
+
+            const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=responseHandler:handleGvizResponse&t=${Date.now()}`;
+            const script = document.createElement('script');
+            script.id = 'gviz-script';
+            script.src = url;
+            script.onerror = function() {
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="text-center py-10 text-red-500 font-medium">ไม่สามารถเชื่อมต่อ Google Sheets ได้</td></tr>`;
+            };
+            document.body.appendChild(script);
+        }
+
+        window.handleGvizResponse = function(response) {
+            if (!response || response.status === 'error') {
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="text-center py-10 text-red-500 font-medium">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>`;
+                return;
+            }
+
+            const rows = response.table.rows;
+            allData = rows.map(r => {
+                const c = r.c || [];
+                return {
+                    "เลขที่คำร้อง": c[0] ? String(c[0].v || '') : '',
+                    "วันที่ยื่นคำขอ": c[1] ? String(c[1].f || c[1].v || '') : '',
+                    "ผู้แจ้ง": c[2] ? String(c[2].v || '') : '',
+                    "โทรศัพท์": c[3] ? String(c[3].v || '') : '',
+                    "ประเภทงาน": c[4] ? String(c[4].v || '') : '',
+                    "สถานที่": c[5] ? String(c[5].v || '') : '',
+                    "รายละเอียดปัญหา": c[6] ? String(c[6].v || '') : ''
+                };
+            });
+
+            document.getElementById('totalCount').innerText = allData.length;
+            renderTable(allData);
+            updateStats(allData);
+        };
+
+        // ฟังก์ชันตัวกรองขั้นสูงแบบผสมผสาน (Keyword, Category, Year)
+        function applyFilters() {
+            const keyword = document.getElementById('filterKeyword').value.toLowerCase().trim();
+            const selectedCategory = document.getElementById('filterCategory').value;
+            const selectedYear = document.getElementById('filterYear').value;
+
+            const filtered = allData.filter(item => {
+                // ตรวจสอบ Keyword
+                const matchKeyword = keyword === '' || Object.values(item).some(val => String(val).toLowerCase().includes(keyword));
+                
+                // ตรวจสอบ Category
+                const matchCategory = selectedCategory === '' || (item['ประเภทงาน'] || '').includes(selectedCategory);
+
+                // ตรวจสอบ Year (ดึงปี พ.ศ. จากวันที่ยื่นคำขอ เช่น 2569)
+                const dateStr = item['วันที่ยื่นคำขอ'] || '';
+                const matchYear = selectedYear === '' || dateStr.includes(selectedYear);
+
+                return matchKeyword && matchCategory && matchYear;
+            });
+
+            renderTable(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('filterKeyword').value = '';
+            document.getElementById('filterCategory').value = '';
+            document.getElementById('filterYear').value = '';
+            renderTable(allData);
+        }
+
+        function renderTable(dataArray) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            document.getElementById('filteredCount').innerText = dataArray.length;
+
+            if (!dataArray || dataArray.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-400">ไม่พบรายการที่ตรงกับเงื่อนไขการค้นหา</td></tr>`;
+                return;
+            }
+
+            [...dataArray].reverse().forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/85 transition duration-150 cursor-pointer group";
+                tr.onclick = function() { openModal(row); };
+
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-emerald-700 text-xs align-top">${row['เลขที่คำร้อง'] || '-'}</td>
+                    <td class="p-3 text-slate-500 text-xs align-top">${row['วันที่ยื่นคำขอ'] || '-'}</td>
+                    <td class="p-3 align-top">
+                        <div class="font-medium text-slate-800 text-xs">${row['ผู้แจ้ง'] || '-'}</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5"><i class="fa-solid fa-phone text-[10px]"></i> ${row['โทรศัพท์'] || '-'}</div>
+                    </td>
+                    <td class="p-3 align-top">
+                        <span class="inline-block bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded border border-slate-200 mb-1">${row['ประเภทงาน'] || '-'}</span>
+                        <div class="text-[11px] text-slate-500 font-medium leading-relaxed"><i class="fa-solid fa-location-dot text-[10px] text-emerald-600"></i> ${row['สถานที่'] || '-'}</div>
+                    </td>
+                    <td class="p-3 text-slate-600 text-xs align-top relative">
+                        <div class="line-clamp-2 group-hover:text-emerald-800 transition-colors">${row['รายละเอียดปัญหา'] || '-'}</div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openModal(row) {
+            document.getElementById('m_id').innerText = row['เลขที่คำร้อง'] || '-';
+            document.getElementById('m_date').innerText = row['วันที่ยื่นคำขอ'] || '-';
+            document.getElementById('m_name').innerText = row['ผู้แจ้ง'] || '-';
+            document.getElementById('m_phone').innerText = row['โทรศัพท์'] || '-';
+            document.getElementById('m_type').innerText = row['ประเภทงาน'] || '-';
+            document.getElementById('m_loc').innerText = row['สถานที่'] || '-';
+            document.getElementById('m_desc').innerText = row['รายละเอียดปัญหา'] || '-';
+
+            const modal = document.getElementById('detailModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('detailModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        function updateStats(dataArray) {
+            document.getElementById('stat-total').innerText = dataArray.length;
+            let ac = 0, elec = 0, water = 0;
+            
+            let floorCounts = {
+                'Co-Working Space': 0,
+                'ชั้น 1': 0,
+                'ชั้น 2': 0,
+                'ชั้น 3': 0,
+                'ชั้น 4': 0,
+                'ชั้น 5': 0
+            };
+            let fOther = 0;
+            let categories = {};
+
+            dataArray.forEach(item => {
+                const desc = (item['รายละเอียดปัญหา'] || '').toLowerCase();
+                const type = (item['ประเภทงาน'] || 'อื่น ๆ').trim();
+                const loc = (item['สถานที่'] || '').toLowerCase();
+
+                if (desc.includes('แอร์') || desc.includes('เครื่องปรับอากาศ')) ac++;
+                if (type.includes('ไฟฟ้า') || desc.includes('ไฟ') || desc.includes('หลอดไฟ')) elec++;
+                if (type.includes('ประปา') || desc.includes('น้ำ') || desc.includes('รั่ว')) water++;
+
+                categories[type] = (categories[type] || 0) + 1;
+
+                if (loc.includes('co-working') || desc.includes('co-working')) {
+                    floorCounts['Co-Working Space']++;
+                } else if (loc.includes('ชั้น 1') || loc.includes('ชั้น1') || loc.includes('80-1')) {
+                    floorCounts['ชั้น 1']++;
+                } else if (loc.includes('ชั้น 2') || loc.includes('ชั้น2') || loc.includes('80-2')) {
+                    floorCounts['ชั้น 2']++;
+                } else if (loc.includes('ชั้น 3') || loc.includes('ชั้น3') || loc.includes('80-3')) {
+                    floorCounts['ชั้น 3']++;
+                } else if (loc.includes('ชั้น 4') || loc.includes('ชั้น4') || loc.includes('80-4')) {
+                    floorCounts['ชั้น 4']++;
+                } else if (loc.includes('ชั้น 5') || loc.includes('ชั้น5') || loc.includes('80-5')) {
+                    floorCounts['ชั้น 5']++;
+                } else {
+                    fOther++;
+                }
+            });
+
+            document.getElementById('stat-ac').innerText = ac;
+            document.getElementById('stat-electric').innerText = elec;
+            document.getElementById('stat-water').innerText = water;
+
+            renderCategoryChart(categories);
+            renderFloorBarChart(floorCounts, fOther);
+        }
+
+        function renderCategoryChart(categories) {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            if (categoryPieChart) categoryPieChart.destroy();
+
+            categoryPieChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categories),
+                    datasets: [{
+                        data: Object.values(categories),
+                        backgroundColor: ['#005a2b', '#3b82f6', '#f59e0b', '#06b6d4', '#ec4899', '#8b5cf6'],
+                        borderWidth: 2, borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    cutout: '65%', 
+                    plugins: {
+                        legend: { 
+                            position: 'bottom', 
+                            labels: { 
+                                font: { family: 'Prompt', size: 11 },
+                                padding: 15,
+                                usePointStyle: true,
+                                boxWidth: 8
+                            } 
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderFloorBarChart(floorCounts, otherCount) {
+            const ctx = document.getElementById('floorBarChart').getContext('2d');
+            if (floorBarChart) floorBarChart.destroy();
+
+            const labels = Object.keys(floorCounts);
+            const dataValues = Object.values(floorCounts);
+
+            const drawValuesPlugin = {
+                id: 'drawValuesPlugin',
+                afterDatasetsDraw(chart, args, options) {
+                    const { ctx } = chart;
+                    chart.data.datasets.forEach((dataset, i) => {
+                        const meta = chart.getDatasetMeta(i);
+                        meta.data.forEach((bar, index) => {
+                            const value = dataset.data[index];
+                            if(value > 0 || value === 0) {
+                                ctx.fillStyle = '#1e293b'; 
+                                ctx.font = 'bold 12px Prompt';
+                                ctx.textAlign = 'left';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillText(value, bar.x + 8, bar.y); 
+                            }
+                        });
+                    });
+                }
+            };
+
+            floorBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'จำนวนคำร้อง',
+                        data: dataValues,
+                        backgroundColor: '#005a2b',
+                        hoverBackgroundColor: '#047857',
+                        borderRadius: 4,
+                        maxBarThickness: 32 
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: { right: 30 } 
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: { label: function(context) { return ` ${context.raw} รายการ`; } }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            suggestedMax: Math.max(...dataValues) + 1, 
+                            ticks: { precision: 0, font: { family: 'Prompt', size: 11 } },
+                            grid: { color: '#e2e8f0' }
+                        },
+                        y: {
+                            ticks: { font: { family: 'Prompt', size: 12 } },
+                            grid: { display: false }
+                        }
+                    }
+                },
+                plugins: [drawValuesPlugin] 
+            });
+
+            let maxVal = -1;
+            let topFloors = [];
+            for (const [f, count] of Object.entries(floorCounts)) {
+                if (count > maxVal && count > 0) {
+                    maxVal = count;
+                    topFloors = [`${f} (${count} รายการ)`];
+                } else if (count === maxVal && count > 0) {
+                    topFloors.push(`${f} (${count} รายการ)`);
+                }
+            }
+
+            document.getElementById('detail-top-floor').innerText = topFloors.length > 0 ? topFloors.join(', ') : 'ไม่มีรายการคำร้อง';
+            document.getElementById('detail-other-count').innerText = `${otherCount} รายการ`;
+        }
+
+        document.getElementById('repairForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...`;
+
+            const locBuilding = document.getElementById('location_building').value.trim();
+            const locFloor = document.getElementById('location_floor').value;
+            const locRoom = document.getElementById('location_room').value.trim();
+            const combinedLocation = `สถานที่: ${locBuilding} | ${locFloor} | ห้อง: ${locRoom}`;
+
+            const formData = {
+                "เลขที่คำร้อง": document.getElementById('request_id').value.trim(),
+                "วันที่ยื่นคำขอ": getCurrentDate(),
+                "ผู้แจ้ง": document.getElementById('reporter').value,
+                "โทรศัพท์": document.getElementById('phone').value,
+                "ประเภทงาน": document.getElementById('category').value,
+                "สถานที่": combinedLocation,
+                "รายละเอียดปัญหา": document.getElementById('description').value
+            };
+
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(formData)
+                });
+                alert('บันทึกรายการแจ้งซ่อมสำเร็จ!');
+                document.getElementById('repairForm').reset();
+                document.getElementById('location_building').value = "อาคารเรียนรวม 80 ปี"; 
+                setTimeout(loadDataFromGviz, 1500);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> บันทึกรายการแจ้งซ่อม`;
+            }
+        });
+    </script>
+</body>
+</html>
