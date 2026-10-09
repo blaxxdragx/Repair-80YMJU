@@ -13,7 +13,7 @@
     <!-- Chart.js แสดงกราฟ -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Prompt', sans-serif; }
+        body { font-family: 'Prompt', sans-serif; background-color: #f8fafc; }
         .mju-bg { background-color: #005a2b; }
         .mju-border { border-color: #005a2b; }
         .mju-text { color: #005a2b; }
@@ -25,18 +25,18 @@
         }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
+<body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
     <!-- Header / Navbar -->
-    <header class="mju-bg text-white shadow-lg border-b-4 border-amber-400">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+    <header class="mju-bg text-white shadow-md border-b-4 border-amber-400">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-amber-300 text-2xl font-bold border border-white/20 shadow-inner">
+                <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-amber-300 text-2xl font-bold border border-white/20 shadow-inner">
                     <i class="fa-solid fa-building-circle-check"></i>
                 </div>
                 <div>
                     <h1 class="text-base md:text-xl font-bold tracking-wide">ระบบแจ้งซ่อม และติดตามงานอุปโภค กองกายภาพ และสิ่งแวดล้อม</h1>
-                    <p class="text-xs md:text-sm text-emerald-100 flex items-center gap-2 mt-0.5">
+                    <p class="text-xs md:text-sm text-emerald-100 flex items-center gap-2 mt-0.5 font-light">
                         <span>อาคารเรียนรวม 80 ปี</span>
                         <span>•</span>
                         <span class="text-amber-300 font-medium">มหาวิทยาลัยแม่โจ้</span>
@@ -44,8 +44,8 @@
                 </div>
             </div>
             
-            <div class="flex items-center space-x-3 text-xs md:text-sm">
-                <button onclick="loadDataFromGviz()" class="bg-white/10 hover:bg-white/20 text-white font-medium px-3 py-2 rounded-lg transition border border-white/20 flex items-center gap-2">
+            <div>
+                <button onclick="loadDataFromGviz()" class="bg-white/10 hover:bg-white/20 text-white font-medium px-4 py-2.5 rounded-xl transition border border-white/20 flex items-center gap-2 text-xs shadow-sm">
                     <i class="fa-solid fa-rotate"></i> รีเฟรชข้อมูล
                 </button>
             </div>
@@ -53,22 +53,22 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 py-8 space-y-8 flex-grow w-full">
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-8 flex-grow w-full">
 
         <!-- สรุปสถิติภาพรวมหลัก -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between hover:shadow-md transition">
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/60 flex items-center justify-between hover:shadow-md transition">
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">คำร้องทั้งหมด</p>
                     <h3 class="text-3xl font-extrabold text-slate-800 mt-1"><span id="stat-total">0</span> <span class="text-xs font-normal text-slate-500">รายการ</span></h3>
-                    <p class="text-[10px] text-slate-500 mt-1">อัปเดตจาก Google Sheets</p>
+                    <p class="text-[11px] text-slate-400 mt-1">อัปเดตจาก Google Sheets</p>
                 </div>
                 <div class="w-14 h-14 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
                     <i class="fa-solid fa-list-check"></i>
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between hover:shadow-md transition">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/60 flex items-center justify-between hover:shadow-md transition">
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">เครื่องปรับอากาศ</p>
                     <h3 class="text-3xl font-extrabold text-sky-600 mt-1"><span id="stat-ac">0</span> <span class="text-xs font-normal text-slate-500">รายการ</span></h3>
@@ -78,7 +78,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between hover:shadow-md transition">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/60 flex items-center justify-between hover:shadow-md transition">
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">ไฟฟ้า & แสงสว่าง</p>
                     <h3 class="text-3xl font-extrabold text-amber-600 mt-1"><span id="stat-electric">0</span> <span class="text-xs font-normal text-slate-500">รายการ</span></h3>
@@ -88,7 +88,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between hover:shadow-md transition">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/60 flex items-center justify-between hover:shadow-md transition">
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">ระบบประปา & สุขภัณฑ์</p>
                     <h3 class="text-3xl font-extrabold text-teal-600 mt-1"><span id="stat-water">0</span> <span class="text-xs font-normal text-slate-500">รายการ</span></h3>
@@ -102,38 +102,38 @@
         <!-- สรุปสัดส่วนประเภทงาน และ กราฟแท่งแสดงจำแนกตามชั้น -->
         <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <!-- สัดส่วนประเภทงาน (Doughnut Chart) -->
-            <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+            <div class="lg:col-span-5 bg-white p-6 rounded-3xl shadow-sm border border-slate-200/60 flex flex-col justify-between">
                 <div>
                     <h3 class="text-base font-bold text-slate-800 mb-1 flex items-center gap-2">
                         <i class="fa-solid fa-chart-pie mju-text"></i> สัดส่วนประเภทงาน
                     </h3>
-                    <p class="text-xs text-slate-500 mb-2">วิเคราะห์สัดส่วนหมวดหมู่งานซ่อมบำรุง</p>
+                    <p class="text-xs text-slate-400 mb-2">วิเคราะห์สัดส่วนหมวดหมู่งานซ่อมบำรุง</p>
                 </div>
-                <div class="relative h-[280px] w-full flex justify-center items-center mt-2">
+                <div class="relative h-[260px] w-full flex justify-center items-center my-4">
                     <canvas id="categoryChart"></canvas>
                 </div>
             </div>
 
             <!-- จำนวนรายการจำแนกตามชั้น (Horizontal Bar Chart) -->
-            <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+            <div class="lg:col-span-7 bg-white p-6 rounded-3xl shadow-sm border border-slate-200/60 flex flex-col justify-between">
                 <div>
                     <div class="flex justify-between items-center mb-1">
                         <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-chart-bar mju-text"></i> จำนวนรายการการส่งซ่อมจำแนกตามชั้น
                         </h3>
-                        <span class="text-xs bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full font-medium">ตึก 80 ปี</span>
+                        <span class="text-xs bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-semibold">ตึก 80 ปี</span>
                     </div>
-                    <p class="text-xs text-slate-500 mb-3">แสดงสถิติความถี่ของการเกิดปัญหาในแต่ละพื้นที่</p>
+                    <p class="text-xs text-slate-400 mb-3">แสดงสถิติความถี่ของการเกิดปัญหาในแต่ละพื้นที่</p>
                 </div>
 
-                <div class="relative h-[240px] w-full mt-2 pr-6">
+                <div class="relative h-[220px] w-full mt-2 pr-4">
                     <canvas id="floorBarChart"></canvas>
                 </div>
 
-                <div class="mt-4 p-3.5 bg-slate-50 rounded-xl border border-slate-200/70 text-xs text-slate-600 space-y-1.5">
+                <div class="mt-4 p-4 bg-slate-50/70 rounded-2xl border border-slate-200/60 text-xs text-slate-600 space-y-2">
                     <div class="flex justify-between items-center font-medium text-slate-700">
                         <span><i class="fa-solid fa-circle-exclamation text-amber-500 mr-1.5"></i> ชั้นที่มีการแจ้งซ่อมสูงสุด:</span>
-                        <span id="detail-top-floor" class="text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded">-</span>
+                        <span id="detail-top-floor" class="text-emerald-800 font-bold bg-emerald-100 px-2.5 py-1 rounded-lg">-</span>
                     </div>
                     <div class="flex justify-between items-center text-slate-500">
                         <span><i class="fa-solid fa-layer-group text-slate-400 mr-1.5"></i> รวมคำร้องส่วนกลาง / พื้นที่อื่น ๆ:</span>
@@ -147,7 +147,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
             
             <!-- ฟอร์มแจ้งซ่อม (Col 1-4) -->
-            <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/85 flex flex-col justify-between">
+            <div class="lg:col-span-4 bg-white p-6 rounded-3xl shadow-sm border border-slate-200/60 flex flex-col justify-between">
                 <div>
                     <div class="border-b border-slate-100 pb-3 mb-4 flex items-center justify-between">
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
@@ -155,35 +155,35 @@
                         </h2>
                     </div>
 
-                    <form id="repairForm" class="space-y-3">
+                    <form id="repairForm" class="space-y-3.5">
                         <div>
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">เลขที่คำร้อง <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">เลขที่คำร้อง <span class="text-red-500">*</span></label>
                             <div class="relative">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-hashtag text-xs"></i></span>
-                                <input type="text" id="request_id" required class="w-full pl-9 pr-3 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" placeholder="เช่น REQ-001">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400"><i class="fa-solid fa-hashtag text-xs"></i></span>
+                                <input type="text" id="request_id" required class="w-full pl-10 pr-3.5 py-2.5 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-slate-50/50" placeholder="เช่น REQ-001">
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-2">
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">ชื่อผู้แจ้ง <span class="text-red-500">*</span></label>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อผู้แจ้ง <span class="text-red-500">*</span></label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400"><i class="fa-solid fa-user text-xs"></i></span>
-                                    <input type="text" id="reporter" required class="w-full pl-8 pr-2 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" placeholder="ชื่อ-นามสกุล">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-user text-xs"></i></span>
+                                    <input type="text" id="reporter" required class="w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-slate-50/50" placeholder="ชื่อ-นามสกุล">
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">เบอร์โทร <span class="text-red-500">*</span></label>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">เบอร์โทร <span class="text-red-500">*</span></label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400"><i class="fa-solid fa-phone text-xs"></i></span>
-                                    <input type="tel" id="phone" required class="w-full pl-8 pr-2 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" placeholder="เบอร์โทร/ภายใน">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-phone text-xs"></i></span>
+                                    <input type="tel" id="phone" required class="w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-slate-50/50" placeholder="เบอร์โทร/ภายใน">
                                 </div>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">ประเภทงานซ่อม <span class="text-red-500">*</span></label>
-                            <select id="category" required class="w-full px-3 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-white">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">ประเภทงานซ่อม <span class="text-red-500">*</span></label>
+                            <select id="category" required class="w-full px-3.5 py-2.5 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-slate-50/50 text-slate-700">
                                 <option value="">-- เลือกหมวดหมู่งานซ่อม --</option>
                                 <option value="ซ่อม และติดตั้งไฟฟ้า">ซ่อม และติดตั้งไฟฟ้า</option>
                                 <option value="ซ่อม และติดตั้งประปา">ซ่อม และติดตั้งประปา</option>
@@ -193,16 +193,16 @@
                         </div>
 
                         <div>
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">สถานที่และตำแหน่ง <span class="text-red-500">*</span></label>
-                            <div class="space-y-1.5">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">สถานที่และตำแหน่ง <span class="text-red-500">*</span></label>
+                            <div class="space-y-2">
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-building text-xs"></i></span>
-                                    <input type="text" id="location_building" required class="w-full pl-9 pr-3 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" value="อาคารเรียนรวม 80 ปี">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400"><i class="fa-solid fa-building text-xs"></i></span>
+                                    <input type="text" id="location_building" required class="w-full pl-10 pr-3.5 py-2.5 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-slate-50/50" value="อาคารเรียนรวม 80 ปี">
                                 </div>
                                 <div class="grid grid-cols-2 gap-2">
                                     <div class="relative">
-                                        <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400"><i class="fa-solid fa-layer-group text-xs"></i></span>
-                                        <select id="location_floor" required class="w-full pl-8 pr-2 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-white text-slate-700">
+                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-layer-group text-xs"></i></span>
+                                        <select id="location_floor" required class="w-full pl-9 pr-2.5 py-2.5 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-slate-50/50 text-slate-700">
                                             <option value="">-- ระบุชั้น --</option>
                                             <option value="ชั้น 1">ชั้น 1</option>
                                             <option value="ชั้น 2">ชั้น 2</option>
@@ -214,37 +214,37 @@
                                         </select>
                                     </div>
                                     <div class="relative">
-                                        <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400"><i class="fa-solid fa-door-open text-xs"></i></span>
-                                        <input type="text" id="location_room" required class="w-full pl-8 pr-2 py-1.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" placeholder="ห้อง เช่น 80-503">
+                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-door-open text-xs"></i></span>
+                                        <input type="text" id="location_room" required class="w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-slate-50/50" placeholder="ห้อง เช่น 80-503">
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">รายละเอียดปัญหา <span class="text-red-500">*</span></label>
-                            <textarea id="description" rows="2" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs" placeholder="อธิบายอาการเบื้องต้น..."></textarea>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">รายละเอียดปัญหา <span class="text-red-500">*</span></label>
+                            <textarea id="description" rows="3" required class="w-full p-3 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-600 outline-none text-xs bg-slate-50/50" placeholder="อธิบายอาการเบื้องต้น..."></textarea>
                         </div>
                     </form>
                 </div>
 
-                <button type="submit" form="repairForm" id="submitBtn" class="w-full mju-bg hover:bg-emerald-800 text-white font-semibold py-2.5 rounded-xl shadow-md transition duration-200 text-xs flex items-center justify-center gap-2 mt-3">
+                <button type="submit" form="repairForm" id="submitBtn" class="w-full mju-bg hover:bg-emerald-800 text-white font-semibold py-3 rounded-2xl shadow-md transition duration-200 text-xs flex items-center justify-center gap-2 mt-4">
                     <i class="fa-solid fa-paper-plane"></i> บันทึกรายการแจ้งซ่อม
                 </button>
             </div>
 
             <!-- ตารางแสดงข้อมูลรายการแจ้งซ่อม (Col 5-12) พร้อมฟีเจอร์ค้นหาขั้นสูง -->
-            <div class="lg:col-span-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+            <div class="lg:col-span-8 bg-white p-6 rounded-3xl shadow-sm border border-slate-200/60 flex flex-col justify-between">
                 
-                <div class="space-y-4">
+                <div class="space-y-5">
                     <!-- ส่วนหัวข้อและช่องตัวกรองขั้นสูง -->
-                    <div class="border-b border-slate-100 pb-4 space-y-3">
+                    <div class="border-b border-slate-100 pb-5 space-y-4">
                         <div class="flex items-center justify-between">
                             <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                                 <i class="fa-solid fa-filter mju-text"></i> ค้นหาและตัวกรองข้อมูลขั้นสูง
                             </h2>
-                            <button onclick="resetFilters()" class="text-xs text-red-600 hover:text-red-800 font-medium flex items-center gap-1 transition">
-                                <i class="fa-solid fa-rotate-right"></i> ล้างตัวกรองทั้งหมด
+                            <button onclick="resetFilters()" class="text-xs text-red-600 hover:text-red-800 font-medium flex items-center gap-1.5 transition bg-red-50 px-3 py-1.5 rounded-xl">
+                                <i class="fa-solid fa-rotate-right"></i> ล้างตัวกรอง
                             </button>
                         </div>
 
@@ -252,19 +252,19 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <!-- ช่องค้นหาหลัก -->
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-500 mb-1">คำค้นหาหลัก (เลขที่/ผู้แจ้ง/ปัญหา/ห้อง)</label>
+                                <label class="block text-[11px] font-semibold text-slate-500 mb-1.5">คำค้นหาหลัก</label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                                         <i class="fa-solid fa-magnifying-glass text-xs"></i>
                                     </span>
-                                    <input type="text" id="filterKeyword" onkeyup="applyFilters()" placeholder="พิมพ์สิ่งที่ต้องการค้นหา..." class="w-full pl-9 pr-3 py-1.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-slate-50/50">
+                                    <input type="text" id="filterKeyword" onkeyup="applyFilters()" placeholder="เลขที่/ผู้แจ้ง/ปัญหา/ห้อง..." class="w-full pl-10 pr-3.5 py-2.5 border border-slate-200 rounded-2xl text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-slate-50/50">
                                 </div>
                             </div>
 
                             <!-- กรองประเภทงานซ่อม -->
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-500 mb-1">ประเภทงานซ่อม</label>
-                                <select id="filterCategory" onchange="applyFilters()" class="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white text-slate-700">
+                                <label class="block text-[11px] font-semibold text-slate-500 mb-1.5">ประเภทงานซ่อม</label>
+                                <select id="filterCategory" onchange="applyFilters()" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-2xl text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-slate-50/50 text-slate-700">
                                     <option value="">แสดงทั้งหมด</option>
                                     <option value="ซ่อม และติดตั้งไฟฟ้า">ซ่อม และติดตั้งไฟฟ้า</option>
                                     <option value="ซ่อม และติดตั้งประปา">ซ่อม และติดตั้งประปา</option>
@@ -275,8 +275,8 @@
 
                             <!-- กรองปีที่แจ้ง (พ.ศ.) -->
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-500 mb-1">ปีที่แจ้ง (พ.ศ.)</label>
-                                <select id="filterYear" onchange="applyFilters()" class="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white text-slate-700">
+                                <label class="block text-[11px] font-semibold text-slate-500 mb-1.5">ปีที่แจ้ง (พ.ศ.)</label>
+                                <select id="filterYear" onchange="applyFilters()" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-2xl text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-slate-50/50 text-slate-700">
                                     <option value="">แสดงทั้งหมดทุกปี</option>
                                     <option value="2569">พ.ศ. 2569</option>
                                     <option value="2568">พ.ศ. 2568</option>
@@ -287,21 +287,21 @@
                         </div>
 
                         <!-- สรุปผลลัพธ์การกรอง -->
-                        <div class="flex justify-between items-center text-xs text-slate-500 pt-1">
+                        <div class="flex justify-between items-center text-xs text-slate-400 pt-1">
                             <span>พบข้อมูล <strong id="filteredCount" class="text-emerald-700 font-bold">0</strong> จากทั้งหมด <strong id="totalCount" class="text-slate-800 font-bold">0</strong> รายการ</span>
                         </div>
                     </div>
 
                     <!-- ตารางข้อมูล -->
-                    <div class="overflow-x-auto border border-slate-200/80 rounded-xl h-[340px]">
+                    <div class="overflow-x-auto border border-slate-200/60 rounded-2xl h-[360px]">
                         <table class="w-full text-left border-collapse text-sm table-fixed">
-                            <thead class="sticky top-0 bg-slate-100 text-slate-700 border-b border-slate-200 text-xs uppercase tracking-wider font-semibold z-10 shadow-sm">
+                            <thead class="sticky top-0 bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider font-semibold z-10">
                                 <tr>
-                                    <th class="p-3 w-[15%]">เลขที่คำร้อง</th>
-                                    <th class="p-3 w-[15%]">วันที่ยื่นคำขอ</th>
-                                    <th class="p-3 w-[20%]">ผู้แจ้ง / ติดต่อ</th>
-                                    <th class="p-3 w-[25%]">สถานที่</th>
-                                    <th class="p-3 w-[25%]">รายละเอียดปัญหา</th>
+                                    <th class="p-3.5 w-[15%]">เลขที่คำร้อง</th>
+                                    <th class="p-3.5 w-[15%]">วันที่ยื่นคำขอ</th>
+                                    <th class="p-3.5 w-[20%]">ผู้แจ้ง / ติดต่อ</th>
+                                    <th class="p-3.5 w-[25%]">สถานที่</th>
+                                    <th class="p-3.5 w-[25%]">รายละเอียดปัญหา</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody" class="divide-y divide-slate-100">
@@ -316,7 +316,7 @@
                     </div>
                 </div>
 
-                <div class="text-[11px] text-slate-400 text-right pt-2">
+                <div class="text-[11px] text-slate-400 text-right pt-3">
                     * คลิกที่แถวในตารางเพื่อดูรายละเอียดคำร้องฉบับเต็ม
                 </div>
 
@@ -326,11 +326,30 @@
 
     </main>
 
+    <!-- Footer / Credit & Contact Section -->
+    <footer class="bg-slate-900 text-slate-300 text-xs py-8 mt-16 border-t-4 border-emerald-700">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+            <div>
+                <p class="font-bold text-white text-sm">ระบบแจ้งซ่อม และติดตามงานอุปโภค กองกายภาพ และสิ่งแวดล้อม</p>
+                <p class="text-slate-400 mt-1 font-light">อาคารเรียนรวม 80 ปี มหาวิทยาลัยแม่โจ้ (Maejo University)</p>
+            </div>
+            <div class="space-y-1.5 text-slate-300 bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60">
+                <p class="font-semibold text-amber-300"><i class="fa-solid fa-headset mr-1"></i> ช่องทางติดต่อสอบถาม / แจ้งปัญหาเร่งด่วน</p>
+                <p class="text-slate-300"><i class="fa-solid fa-phone text-emerald-400 mr-1.5"></i> โทรศัพท์ภายใน: <strong>1040</strong></p>
+                <p class="text-slate-300"><i class="fa-solid fa-phone-volume text-emerald-400 mr-1.5"></i> มือถือ: <strong>093-134-3753 (คุณบอล)</strong> | <strong>097-920-2252 (คุณมังกร)</strong></p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 mt-8 pt-4 border-t border-slate-800 text-center text-[11px] text-slate-500 flex flex-col md:flex-row justify-between items-center gap-2">
+            <span>&copy; 2026 อาคารเรียนรวม 80 ปี มหาวิทยาลัยแม่โจ้. All rights reserved.</span>
+            <span class="text-emerald-400 font-medium">Developed by blackdragx_</span>
+        </div>
+    </footer>
+
     <!-- Modal Popup สำหรับดูรายละเอียด -->
-    <div id="detailModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 transition-transform duration-300" id="modalContent">
+    <div id="detailModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 transition-transform duration-300 border border-slate-100" id="modalContent">
             <!-- Modal Header -->
-            <div class="mju-bg text-white px-5 py-4 flex justify-between items-center">
+            <div class="mju-bg text-white px-6 py-4 flex justify-between items-center">
                 <h3 class="text-base font-bold flex items-center gap-2"><i class="fa-solid fa-circle-info"></i> รายละเอียดการแจ้งซ่อม</h3>
                 <button onclick="closeModal()" class="text-white hover:text-red-200 transition text-lg w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
                     <i class="fa-solid fa-xmark"></i>
@@ -339,7 +358,7 @@
             
             <!-- Modal Body -->
             <div class="p-6 space-y-4 text-sm text-slate-700">
-                <div class="grid grid-cols-2 gap-4 border-b border-slate-100 pb-3">
+                <div class="grid grid-cols-2 gap-4 border-b border-slate-100 pb-3.5">
                     <div>
                         <span class="block text-xs font-semibold text-slate-400 mb-1">เลขที่คำร้อง</span>
                         <span id="m_id" class="font-bold text-emerald-700"></span>
@@ -350,21 +369,21 @@
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-2 gap-4 border-b border-slate-100 pb-3">
+                <div class="grid grid-cols-2 gap-4 border-b border-slate-100 pb-3.5">
                     <div>
                         <span class="block text-xs font-semibold text-slate-400 mb-1">ผู้แจ้ง</span>
                         <span id="m_name" class="font-medium text-slate-800"></span>
                     </div>
                     <div>
                         <span class="block text-xs font-semibold text-slate-400 mb-1">เบอร์ติดต่อ</span>
-                        <span class="font-medium text-slate-800 flex items-center gap-1"><i class="fa-solid fa-phone text-xs text-slate-400"></i> <span id="m_phone"></span></span>
+                        <span class="font-medium text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-phone text-xs text-slate-400"></i> <span id="m_phone"></span></span>
                     </div>
                 </div>
 
-                <div class="border-b border-slate-100 pb-3">
+                <div class="border-b border-slate-100 pb-3.5">
                     <span class="block text-xs font-semibold text-slate-400 mb-1">ประเภทงานและสถานที่</span>
-                    <div id="m_type_badge" class="mb-1.5 inline-block"></div>
-                    <div class="text-slate-700 flex items-start gap-1.5">
+                    <div id="m_type_badge" class="mb-2 inline-block"></div>
+                    <div class="text-slate-700 flex items-start gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-100">
                         <i class="fa-solid fa-location-dot text-emerald-600 mt-0.5"></i>
                         <span id="m_loc" class="leading-relaxed"></span>
                     </div>
@@ -372,13 +391,13 @@
 
                 <div>
                     <span class="block text-xs font-semibold text-slate-400 mb-1">รายละเอียดปัญหา / อาการ</span>
-                    <div id="m_desc" class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/60 text-slate-700 whitespace-pre-wrap leading-relaxed"></div>
+                    <div id="m_desc" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 text-slate-700 whitespace-pre-wrap leading-relaxed"></div>
                 </div>
             </div>
 
             <!-- Modal Footer -->
             <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
-                <button onclick="closeModal()" class="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 px-5 py-2 rounded-xl font-medium transition text-sm shadow-sm">ปิดหน้าต่าง</button>
+                <button onclick="closeModal()" class="bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 px-6 py-2.5 rounded-2xl font-medium transition text-xs shadow-sm">ปิดหน้าต่าง</button>
             </div>
         </div>
     </div>
@@ -417,7 +436,6 @@
             document.body.appendChild(script);
         }
 
-        // ฟังก์ชันช่วยแปลงวันที่สำหรับเรียงลำดับ (รองรับทั้ง DD/MM/YYYY และ YYYY-MM-DD)
         function parseCustomDate(dateStr) {
             if (!dateStr) return 0;
             let clean = dateStr.trim();
@@ -455,7 +473,6 @@
                 };
             });
 
-            // เรียงลำดับจากใหม่สุดไปเก่าสุด
             allData.sort((a, b) => parseCustomDate(b["วันที่ยื่นคำขอ"]) - parseCustomDate(a["วันที่ยื่นคำขอ"]));
 
             document.getElementById('totalCount').innerText = allData.length;
@@ -463,19 +480,18 @@
             updateStats(allData);
         };
 
-        // ฟังก์ชันสร้าง Badge ประเภทงานครอบคลุมทุกหมวดหมู่พร้อมไอคอนและสีพาสเทล
         function getCategoryBadge(type) {
             let cleanType = (type || '').trim();
             if (cleanType.includes('ไฟฟ้า')) {
-                return `<span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-[10px] font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-bolt text-[10px]"></i> ไฟฟ้า</span>`;
+                return `<span class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-[11px] font-semibold px-3 py-1 rounded-full"><i class="fa-solid fa-bolt text-[10px]"></i> ไฟฟ้า</span>`;
             } else if (cleanType.includes('ประปา')) {
-                return `<span class="inline-flex items-center gap-1 bg-blue-100 text-blue-800 text-[10px] font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-droplet text-[10px]"></i> ประปา</span>`;
+                return `<span class="inline-flex items-center gap-1.5 bg-blue-100 text-blue-800 text-[11px] font-semibold px-3 py-1 rounded-full"><i class="fa-solid fa-droplet text-[10px]"></i> ประปา</span>`;
             } else if (cleanType.includes('ครุภัณฑ์') || cleanType.includes('ซ่อมอาคาร')) {
-                return `<span class="inline-flex items-center gap-1 bg-purple-100 text-purple-800 text-[10px] font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-chair text-[10px]"></i> ครุภัณฑ์/อาคาร</span>`;
+                return `<span class="inline-flex items-center gap-1.5 bg-purple-100 text-purple-800 text-[11px] font-semibold px-3 py-1 rounded-full"><i class="fa-solid fa-chair text-[10px]"></i> ครุภัณฑ์/อาคาร</span>`;
             } else if (cleanType.includes('เครื่องปรับอากาศ') || cleanType.includes('แอร์') || cleanType.includes('อื่น')) {
-                return `<span class="inline-flex items-center gap-1 bg-orange-100 text-orange-800 text-[10px] font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-snowflake text-[10px]"></i> แอร์ / อื่นๆ</span>`;
+                return `<span class="inline-flex items-center gap-1.5 bg-orange-100 text-orange-800 text-[11px] font-semibold px-3 py-1 rounded-full"><i class="fa-solid fa-snowflake text-[10px]"></i> แอร์ / อื่นๆ</span>`;
             } else {
-                return `<span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 text-[10px] font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-ellipsis text-[10px]"></i> ${cleanType || 'อื่นๆ'}</span>`;
+                return `<span class="inline-flex items-center gap-1.5 bg-slate-100 text-slate-700 text-[11px] font-semibold px-3 py-1 rounded-full"><i class="fa-solid fa-ellipsis text-[10px]"></i> ${cleanType || 'อื่นๆ'}</span>`;
             }
         }
 
@@ -509,27 +525,27 @@
             document.getElementById('filteredCount').innerText = dataArray.length;
 
             if (!dataArray || dataArray.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-400">ไม่พบรายการที่ตรงกับเงื่อนไขการค้นหา</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-slate-400">ไม่พบรายการที่ตรงกับเงื่อนไขการค้นหา</td></tr>`;
                 return;
             }
 
-            dataArray.forEach((row, index) => {
+            dataArray.forEach((row) => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50/85 transition duration-150 cursor-pointer group";
+                tr.className = "hover:bg-slate-50/80 transition duration-150 cursor-pointer group";
                 tr.onclick = function() { openModal(row); };
 
                 tr.innerHTML = `
-                    <td class="p-3 font-semibold text-emerald-700 text-xs align-top">${row['เลขที่คำร้อง'] || '-'}</td>
-                    <td class="p-3 text-slate-500 text-xs align-top">${row['วันที่ยื่นคำขอ'] || '-'}</td>
-                    <td class="p-3 align-top">
+                    <td class="p-4 font-semibold text-emerald-700 text-xs align-top">${row['เลขที่คำร้อง'] || '-'}</td>
+                    <td class="p-4 text-slate-500 text-xs align-top">${row['วันที่ยื่นคำขอ'] || '-'}</td>
+                    <td class="p-4 align-top">
                         <div class="font-medium text-slate-800 text-xs">${row['ผู้แจ้ง'] || '-'}</div>
-                        <div class="text-[11px] text-slate-400 mt-0.5"><i class="fa-solid fa-phone text-[10px]"></i> ${row['โทรศัพท์'] || '-'}</div>
+                        <div class="text-[11px] text-slate-400 mt-1"><i class="fa-solid fa-phone text-[10px]"></i> ${row['โทรศัพท์'] || '-'}</div>
                     </td>
-                    <td class="p-3 align-top">
-                        <div class="mb-1">${getCategoryBadge(row['ประเภทงาน'])}</div>
-                        <div class="text-[11px] text-slate-500 font-medium leading-relaxed"><i class="fa-solid fa-location-dot text-[10px] text-emerald-600"></i> ${row['สถานที่'] || '-'}</div>
+                    <td class="p-4 align-top">
+                        <div class="mb-1.5">${getCategoryBadge(row['ประเภทงาน'])}</div>
+                        <div class="text-[11px] text-slate-500 font-medium leading-relaxed"><i class="fa-solid fa-location-dot text-[10px] text-emerald-600 mr-1"></i> ${row['สถานที่'] || '-'}</div>
                     </td>
-                    <td class="p-3 text-slate-600 text-xs align-top relative">
+                    <td class="p-4 text-slate-600 text-xs align-top relative">
                         <div class="line-clamp-2 group-hover:text-emerald-800 transition-colors">${row['รายละเอียดปัญหา'] || '-'}</div>
                     </td>
                 `;
@@ -639,13 +655,13 @@
                     datasets: [{
                         data: Object.values(categories),
                         backgroundColor: ['#005a2b', '#3b82f6', '#f59e0b', '#06b6d4', '#ec4899', '#8b5cf6'],
-                        borderWidth: 2, borderColor: '#ffffff'
+                        borderWidth: 3, borderColor: '#ffffff'
                     }]
                 },
                 options: {
                     responsive: true, 
                     maintainAspectRatio: false,
-                    cutout: '65%', 
+                    cutout: '70%', 
                     plugins: {
                         legend: { 
                             position: 'bottom', 
@@ -670,7 +686,7 @@
 
             const drawValuesPlugin = {
                 id: 'drawValuesPlugin',
-                afterDatasetsDraw(chart, args, options) {
+                afterDatasetsDraw(chart) {
                     const { ctx } = chart;
                     chart.data.datasets.forEach((dataset, i) => {
                         const meta = chart.getDatasetMeta(i);
@@ -697,8 +713,8 @@
                         data: dataValues,
                         backgroundColor: '#005a2b',
                         hoverBackgroundColor: '#047857',
-                        borderRadius: 4,
-                        maxBarThickness: 32 
+                        borderRadius: 6,
+                        maxBarThickness: 24 
                     }]
                 },
                 options: {
@@ -719,7 +735,7 @@
                             beginAtZero: true,
                             suggestedMax: Math.max(...dataValues) + 1, 
                             ticks: { precision: 0, font: { family: 'Prompt', size: 11 } },
-                            grid: { color: '#e2e8f0' }
+                            grid: { color: '#f1f5f9' }
                         },
                         y: {
                             ticks: { font: { family: 'Prompt', size: 12 } },
