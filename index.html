@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบแจ้งซ่อมอุปกรณ์ - อาคารเรียนรวม 80 ปี มหาวิทยาลัยแม่โจ้</title>
+    <title>ระบบแจ้งซ่อม และติดตามงานอุปโภค กองกายภาพ และสิ่งแวดล้อม - อาคารเรียนรวม 80 ปี มหาวิทยาลัยแม่โจ้</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts (Prompt) -->
@@ -35,8 +35,8 @@
                     <i class="fa-solid fa-building-circle-check"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl md:text-2xl font-bold tracking-wide">ระบบแจ้งซ่อมและติดตามงานอุปกรณ์</h1>
-                    <p class="text-xs md:text-sm text-emerald-100 flex items-center gap-2">
+                    <h1 class="text-base md:text-xl font-bold tracking-wide">ระบบแจ้งซ่อม และติดตามงานอุปโภค กองกายภาพ และสิ่งแวดล้อม</h1>
+                    <p class="text-xs md:text-sm text-emerald-100 flex items-center gap-2 mt-0.5">
                         <span>อาคารเรียนรวม 80 ปี</span>
                         <span>•</span>
                         <span class="text-amber-300 font-medium">มหาวิทยาลัยแม่โจ้</span>
@@ -421,17 +421,15 @@
         function parseCustomDate(dateStr) {
             if (!dateStr) return 0;
             let clean = dateStr.trim();
-            // ถ้าเป็นรูปแบบ YYYY-MM-DD
             if (clean.match(/^\d{4}-\d{2}-\d{2}/)) {
                 return new Date(clean).getTime() || 0;
             }
-            // ถ้าเป็นรูปแบบ DD/MM/YYYY (พ.ศ. หรือ ค.ศ.)
             let parts = clean.split(' ')[0].split('/');
             if (parts.length === 3) {
                 let d = parseInt(parts[0], 10);
                 let m = parseInt(parts[1], 10) - 1;
                 let y = parseInt(parts[2], 10);
-                if (y > 2400) y -= 543; // แปลง พ.ศ. เป็น ค.ศ.
+                if (y > 2400) y -= 543;
                 return new Date(y, m, d).getTime() || 0;
             }
             return new Date(clean).getTime() || 0;
@@ -457,7 +455,7 @@
                 };
             });
 
-            // เรียงลำดับจากใหม่สุดไปเก่าสุดโดยอัตโนมัติ
+            // เรียงลำดับจากใหม่สุดไปเก่าสุด
             allData.sort((a, b) => parseCustomDate(b["วันที่ยื่นคำขอ"]) - parseCustomDate(a["วันที่ยื่นคำขอ"]));
 
             document.getElementById('totalCount').innerText = allData.length;
