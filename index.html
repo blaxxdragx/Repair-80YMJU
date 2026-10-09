@@ -188,7 +188,7 @@
                                 <option value="ซ่อม และติดตั้งไฟฟ้า">ซ่อม และติดตั้งไฟฟ้า</option>
                                 <option value="ซ่อม และติดตั้งประปา">ซ่อม และติดตั้งประปา</option>
                                 <option value="ซ่อมอาคาร บ้านพัก/แฟลต ซ่อมครุภัณฑ์">ซ่อมอาคาร / ซ่อมครุภัณฑ์</option>
-                                <option value="อื่น ๆ (โปรดระบุ)">อื่น ๆ (เครื่องปรับอากาศ / ลิฟต์ / IT)</option>
+                                <option value="อื่น ๆ (โปรดระบุ)">อื่น ๆ (เครื่องปรับอากาศ / IT)</option>
                             </select>
                         </div>
 
@@ -363,7 +363,7 @@
 
                 <div class="border-b border-slate-100 pb-3">
                     <span class="block text-xs font-semibold text-slate-400 mb-1">ประเภทงานและสถานที่</span>
-                    <span id="m_type" class="inline-block bg-slate-100 text-slate-700 text-[11px] px-2.5 py-0.5 rounded border border-slate-200 mb-1.5 font-medium"></span>
+                    <div id="m_type_badge" class="mb-1.5 inline-block"></div>
                     <div class="text-slate-700 flex items-start gap-1.5">
                         <i class="fa-solid fa-location-dot text-emerald-600 mt-0.5"></i>
                         <span id="m_loc" class="leading-relaxed"></span>
@@ -442,23 +442,32 @@
             updateStats(allData);
         };
 
-        // ฟังก์ชันตัวกรองขั้นสูงแบบผสมผสาน (Keyword, Category, Year)
+        // ฟังก์ชันสร้าง Badge ประเภทงานครอบคลุมทุกหมวดหมู่พร้อมไอคอนและสีพาสเทล
+        function getCategoryBadge(type) {
+            let cleanType = (type || '').trim();
+            if (cleanType.includes('ไฟฟ้า')) {
+                return `<span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-[10px] font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-bolt text-[10px]"></i> ไฟฟ้า</span>`;
+            } else if (cleanType.includes('ประปา')) {
+                return `<span class="inline-flex items-center gap-1 bg-blue-100 text-blue-800 text-[10px] font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-droplet text-[10px]"></i> ประปา</span>`;
+            } else if (cleanType.includes('ครุภัณฑ์') || cleanType.includes('ซ่อมอาคาร')) {
+                return `<span class="inline-flex items-center gap-1 bg-purple-100 text-purple-800 text-[10px] font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-chair text-[10px]"></i> ครุภัณฑ์/อาคาร</span>`;
+            } else if (cleanType.includes('เครื่องปรับอากาศ') || cleanType.includes('แอร์') || cleanType.includes('อื่น')) {
+                return `<span class="inline-flex items-center gap-1 bg-orange-100 text-orange-800 text-[10px] font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-snowflake text-[10px]"></i> แอร์ / อื่นๆ</span>`;
+            } else {
+                return `<span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 text-[10px] font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-ellipsis text-[10px]"></i> ${cleanType || 'อื่นๆ'}</span>`;
+            }
+        }
+
         function applyFilters() {
             const keyword = document.getElementById('filterKeyword').value.toLowerCase().trim();
             const selectedCategory = document.getElementById('filterCategory').value;
             const selectedYear = document.getElementById('filterYear').value;
 
             const filtered = allData.filter(item => {
-                // ตรวจสอบ Keyword
                 const matchKeyword = keyword === '' || Object.values(item).some(val => String(val).toLowerCase().includes(keyword));
-                
-                // ตรวจสอบ Category
                 const matchCategory = selectedCategory === '' || (item['ประเภทงาน'] || '').includes(selectedCategory);
-
-                // ตรวจสอบ Year (ดึงปี พ.ศ. จากวันที่ยื่นคำขอ เช่น 2569)
                 const dateStr = item['วันที่ยื่นคำขอ'] || '';
                 const matchYear = selectedYear === '' || dateStr.includes(selectedYear);
-
                 return matchKeyword && matchCategory && matchYear;
             });
 
@@ -496,7 +505,7 @@
                         <div class="text-[11px] text-slate-400 mt-0.5"><i class="fa-solid fa-phone text-[10px]"></i> ${row['โทรศัพท์'] || '-'}</div>
                     </td>
                     <td class="p-3 align-top">
-                        <span class="inline-block bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded border border-slate-200 mb-1">${row['ประเภทงาน'] || '-'}</span>
+                        <div class="mb-1">${getCategoryBadge(row['ประเภทงาน'])}</div>
                         <div class="text-[11px] text-slate-500 font-medium leading-relaxed"><i class="fa-solid fa-location-dot text-[10px] text-emerald-600"></i> ${row['สถานที่'] || '-'}</div>
                     </td>
                     <td class="p-3 text-slate-600 text-xs align-top relative">
@@ -512,7 +521,7 @@
             document.getElementById('m_date').innerText = row['วันที่ยื่นคำขอ'] || '-';
             document.getElementById('m_name').innerText = row['ผู้แจ้ง'] || '-';
             document.getElementById('m_phone').innerText = row['โทรศัพท์'] || '-';
-            document.getElementById('m_type').innerText = row['ประเภทงาน'] || '-';
+            document.getElementById('m_type_badge').innerHTML = getCategoryBadge(row['ประเภทงาน']);
             document.getElementById('m_loc').innerText = row['สถานที่'] || '-';
             document.getElementById('m_desc').innerText = row['รายละเอียดปัญหา'] || '-';
 
